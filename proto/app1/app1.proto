@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package miot.app1;
+
+import "google/protobuf/empty.proto";
+
+// https://github.com/envoyproxy/protoc-gen-validate
+// import "validate/validate.proto";
+
+option go_package = "github.com/panlw/using-grpc/proto/app1";
+
+// option java_package = "cn.kinco.miot.app1";
+// option java_outer_classname = "App1Proto";
+
+service App1ProtoRpc {
+  rpc greet(GreetReq) returns (GreetRes);
+  rpc write(WriteReq) returns (google.protobuf.Empty);
+}
+
+enum EchoMode {hi = 0; hello = 1;}
+
+message GreetReq {
+  string id = 1;
+  string greeting = 2; // [(validate.rules).string.min_len = 1];
+  EchoMode mode = 3;
+}
+message GreetRes {
+  string id = 1;
+  oneof greeting {
+    Hi hi = 2;
+    Hello hello = 3;
+  }
+
+  message Hi {
+    string who = 1;
+  }
+  message Hello {
+    string how = 1;
+  }
+}
+
+message WriteReq {
+  string id = 1;
+  string content = 2; // [(validate.rules).string.min_len = 1];
+}
